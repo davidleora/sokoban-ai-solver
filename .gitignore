@@ -24,6 +24,7 @@ credentials.json
 # IDE & OS files
 .vscode/
 .idea/
+.cursor/
 *.swp
 *.swo
 *~
