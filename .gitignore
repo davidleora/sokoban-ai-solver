@@ -1,0 +1,47 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+venv/
+env/
+ENV/
+
+# Environment variables & secrets
+.env
+.env.*
+.env.local
+*.key
+*.pem
+secrets.yaml
+credentials.json
+
+# IDE & OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs & databases
+*.log
+*.db
+*.sqlite
+
+# Model weights & large files (if applicable)
+*.pth
+*.ckpt
+*.h5
+models/
+checkpoints/
+
+# Large level datasets
+boxoban-levels/
+dataset/human_demos/
+result/
