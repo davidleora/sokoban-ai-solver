@@ -43,6 +43,5 @@ models/
 checkpoints/
 
 # Large level datasets
-boxoban-levels/
 dataset/human_demos/
 result/

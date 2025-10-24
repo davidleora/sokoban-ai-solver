@@ -2,14 +2,37 @@
 
 This project uses LLM to generate solution for sokoban puzzle game. It also use LangGraph to manage the workflow.
 
-## Steps to Run
+## Setup Instructions
 
-1. Ensure that your computer installs "uv" package.
-2. At the project root path, type "uv sync"
-3. At the project root path, type "source .venv/bin/activate"
-4. Set API_Key at [www.deepinfra.com](https://deepinfra.com/), and copy the API key to `config.py`
-5. Set API_key at [www.comet.com](https://comet.com/), add copy the API key to `config.py`
-6. Type "python3 main.py"
+### 1. Clone the Repository
+
+Clone the repository with submodules (to include the `boxoban-levels` dataset):
+
+```bash
+git clone --recursive https://github.com/davidleora/sokoban-ai-solver.git
+cd sokoban-ai-solver
+```
+
+Or if you already cloned without `--recursive`, initialize the submodules:
+
+```bash
+git submodule update --init --recursive
+```
+
+### 2. Set Up Python Environment
+
+1. Ensure that your computer installs "uv" package
+2. At the project root path, type `uv sync` (this will create the `.venv` folder automatically)
+3. Activate the virtual environment: `source .venv/bin/activate`
+
+### 3. Configure API Keys
+
+1. Set API_Key at [www.deepinfra.com](https://deepinfra.com/), and copy the API key to `config.py`
+2. Set API_key at [www.comet.com](https://comet.com/), and copy the API key to `config.py`
+
+### 4. Run the Project
+
+Run `python3 main.py`
 
 Waiting for the LLM generate solution for the chosen sokoban puzzle. <br>
 You could take a look at the running records at `/result/running_record.csv` <br>
