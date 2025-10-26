@@ -43,5 +43,4 @@ models/
 checkpoints/
 
 # Large level datasets
-dataset/human_demos/
 result/

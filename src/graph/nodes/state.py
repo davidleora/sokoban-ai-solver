@@ -11,5 +11,5 @@ class SokobanState(TypedDict, total=False):
     visited_map_state: List[str]        # visited maps (serialized)
     current_iteration: int              # current iteration index
     records: dict                       # running metadata recording
-    model_name: str                     # the LLM model name on deepinfra
+    model_name: str                     # the LLM model name
     
