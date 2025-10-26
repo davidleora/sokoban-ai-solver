@@ -4,7 +4,7 @@ from src.sokoban.game_environment import SokobanGame
 
 class SokobanState(TypedDict, total=False):
     map: SokobanGame                    # Current board
-    status: str                         # "unsolved", "continue", "invalid", "success", etc.
+    status: str                         # "success", "unsolved", "empty"
     moves: str                          # All executed primitive moves (L/R/U/D)
     solution: str                       # solution steps (exclude those repetitive cyclic steps)
     max_iterations: int                 # max allowed iteration times
