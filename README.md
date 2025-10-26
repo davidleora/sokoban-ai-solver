@@ -2,6 +2,25 @@
 
 This project uses LLM to generate solution for sokoban puzzle game. It also use LangGraph to manage the workflow.
 
+## System Requirements
+
+⚠️ **This project is Linux-only** and requires a CUDA-enabled environment.
+
+### Hardware Requirements
+- **GPU:** NVIDIA GPU with Turing architecture or newer (RTX 20 series, T4, or better)
+
+### Software Requirements
+- **Operating System:** Linux
+- **CUDA Toolkit:** Version 11.7 to 12.6
+  - Recommended: CUDA 11.7 - 12.3 (most tested versions)
+  - Download from [NVIDIA CUDA Downloads](https://developer.nvidia.com/cuda-downloads)
+- **Python:** 3.11 or higher
+- **GPU Drivers:** Compatible NVIDIA drivers for your CUDA version
+
+### Key Dependencies
+- **bitsandbytes** (>=0.48.1): For model quantization and optimization
+- **torch**: Will be installed automatically with CUDA support
+
 ## Setup Instructions
 
 ### 1. Clone the Repository
