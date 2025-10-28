@@ -15,7 +15,7 @@ def execute_moves(state: SokobanState) -> SokobanState:
         return state
     
     # Execute each move from the LLM's plan
-    for move in state['moves']:
+    for move_idx, move in enumerate(state['moves'], 1):
 
         # Try to execute the move
         if tmp_map.makeMove(move):
@@ -31,18 +31,17 @@ def execute_moves(state: SokobanState) -> SokobanState:
 
             # Check for repeated/cyclic states (LLM got stuck in a loop)
             if cur_map_state in state['visited_map_state']:
-                idx = state['visited_map_state'].index(cur_map_state)
-                total_moves = total_moves[: idx+1]
-                state['visited_map_state'] = state['visited_map_state'][: idx+1]
-                print(f"⚠️  Detected repeated state - LLM created a cycle")
-                continue  # Skip to next move
-            else:
-                state['visited_map_state'].append(cur_map_state)
+                print(f"⚠️  Move #{move_idx} ({move}): Detected repeated state - LLM created a cycle")
+            
+            state['visited_map_state'].append(cur_map_state)
 
         else:
-            print(f"Move '{move}' failed, continuing...")
+            print(f"❌ Move #{move_idx} ({move}): Failed - continuing...")
             continue
 
-    state['status'] = "unsolved"
+    # All moves processed but puzzle not solved
+    # Update map to current position so further prompt sees the updated state
+    state['map'] = tmp_map
+    state['status'] = "need_further_prompt"
     state["moves"] = "" # Clear moves for next iteration
     return state
