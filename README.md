@@ -1,4 +1,4 @@
-# Project Introduction
+# Project Introduction [RESEARCH IN PROGRESS]
 
 This project uses LLM to generate solution for sokoban puzzle game. It also use LangGraph to manage the workflow.
 
@@ -46,8 +46,25 @@ git submodule update --init --recursive
 
 ### 3. Run the Project
 
-Run `python3 main.py`
+#### Single Puzzle Mode
+```bash
+python main.py dataset/human_demos/1_0.txt
+```
 
-Waiting for the LLM generate solution for the chosen sokoban puzzle. <br>
-You could take a look at the running records at `/result/running_record.csv` <br>
-Each running step could be found in the file `/result/result_map_<data_file_name>.txt`. <br><br>
+#### Batch Processing (All 107 Puzzles)
+```bash
+python batch_run.py
+```
+**Note:** The model is loaded once and reused across all files for optimal performance.
+
+## Results
+
+- **GIF animations**: `result/<model_name>/result_map_*.gif`
+- **CSV logs**: `result/running_record.csv`
+
+## Configuration
+
+Edit model settings in `main.py` or `batch_run.py`:
+- `model_name`: LLM model to use (default: `openai/gpt-oss-20b`)
+- `max_iterations`: Fresh restart attempts (default: 2)
+- `max_further_prompts`: Continuation attempts per iteration (default: 5)
