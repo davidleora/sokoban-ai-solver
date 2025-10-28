@@ -8,8 +8,8 @@ def main():
     print("Hello from sokoban-llm-agent!")
     parent_dir = Path.cwd()
 
-    data_file = parent_dir / "dataset/human_demos/1_0.txt"   
-    model_name = "Qwen/Qwen3-14B"
+    data_file = parent_dir / "dataset/human_demos/2_0.txt"   
+    model_name = "openai/gpt-oss-20b"
 
     initial_map = game_environment.SokobanGame(data_file)
 

@@ -1,6 +1,8 @@
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "5"
+
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from dotenv import load_dotenv
 from src import config
 
@@ -9,10 +11,9 @@ load_dotenv()
 
 class LLM_client:
     def __init__(self, model_name):
-        os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 
         self.model_name = model_name
-        self.temperature = 0.5
+        self.temperature = 0.6
 
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.model_name,
@@ -22,19 +23,9 @@ class LLM_client:
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
             trust_remote_code=True,
-            load_in_8bit=True,                      # Enable 8-bit quantization
-            # bnb_4bit_compute_dtype=torch.bfloat16,  # Compute in bfloat16 for better quality
-            # bnb_4bit_use_double_quant=True,         # Double quantization for even less memory
-            # bnb_4bit_quant_type="nf4",              # NormalFloat 4-bit
+            dtype=torch.bfloat16,
             device_map="auto"
-)
-
-        # self.model = AutoModelForCausalLM.from_pretrained(
-        #     self.model_name,
-        #     trust_remote_code=True,
-        #     torch_dtype=torch.bfloat16,
-        #     device_map="auto"
-        # )
+        )
 
         self.SYSTEM_PROMPT_PLAN = F''' 
         You are a skilled player of Sokoban game. Your task is to provide a detailed step-by-step plan to solve the sokoban game. The sokoban game is a puzzle game where the player must push boxes onto target locations in a grid-like environment. The player can only move in four directions (up, down, left, right) and cannot move through walls or other boxes. The goal is to push all boxes onto their respective target locations.        
@@ -107,79 +98,40 @@ class LLM_client:
         self.plan_messages = [
             {"role": "system", "content": self.SYSTEM_PROMPT_PLAN}]
 
-    # # For API-based models
-    # def query_llm_for_moves(self, user_prompt=None):
-    #     total_messages = self.plan_messages.copy()
-    #     if user_prompt:
-    #         total_messages.append({"role": "user", "content": str(user_prompt)})
-
-    #     response = self.llm.chat.completions.create(
-    #         model=self.model_name,
-    #         messages=total_messages,
-    #         temperature=self.temperature,
-
-    #     )
-    #     return response.choices[0].message.content
-
-    # For Instruct models with chat template:
     def query_llm_for_moves(self, user_prompt=None):
         total_messages = self.plan_messages.copy()
         if user_prompt:
             total_messages.append({"role": "user", "content": str(user_prompt)})
-    
-        # Apply chat template
-        prompt = self.tokenizer.apply_chat_template(
+
+        pipe = pipeline(
+            "text-generation",
+            model=self.model,
+            tokenizer=self.tokenizer,
+            device_map="auto",
+            dtype=torch.bfloat16
+        )
+        outputs = pipe(
             total_messages,
-            tokenize=False,
-            add_generation_prompt=True,
-            enable_thinking=False
-        )
-    
-        # Tokenize
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
-    
-        # Generate
-        outputs = self.model.generate(
-            **inputs,
-            max_new_tokens=15000,
+            max_new_tokens=5000,
             temperature=self.temperature,
-            do_sample=True if self.temperature > 0 else False,
+            do_sample=True
         )
-    
-        # Decode (skip input tokens)
-        response = self.tokenizer.decode(
-            outputs[0][inputs['input_ids'].shape[1]:],
-            skip_special_tokens=True
-        )
-        return response.strip()
-
-    # # For base models without chat template:
-    # def query_llm_for_moves(self, user_prompt=None):
-    #     # Manual prompt formatting for base models
-    #     system = self.SYSTEM_PROMPT_PLAN
-    #     user = user_prompt if user_prompt else ""
-
-    #     # Simple concatenation instead of apply_chat_template
-    #     prompt = f"{system}\n\n{user}\n\n"
-
-    #     # Tokenize
-    #     inputs = self.tokenizer(
-    #         prompt, return_tensors="pt").to(self.model.device)
-
-    #     # Generate
-    #     outputs = self.model.generate(
-    #         **inputs,
-    #         max_new_tokens=None,
-    #         temperature=self.temperature,
-    #         do_sample=True if self.temperature > 0 else False,
-    #     )
-
-    #     # Decode (skip input tokens)
-    #     response = self.tokenizer.decode(
-    #         outputs[0][inputs['input_ids'].shape[1]:],
-    #         skip_special_tokens=True
-    #     )
-    #     return response.strip()
+        turn = outputs[0]["generated_text"][-1]
+        content = turn.get("content", "")
+        final = ""
+        if isinstance(content, list):
+            for part in content:
+                t = part.get("type", "")
+                txt = part.get("text", "")
+                if "reason" not in t.lower():
+                    final += txt
+        else:
+            text = content if isinstance(content, str) else str(content)
+            if "assistantfinal" in text:
+                final = text.split("assistantfinal")[-1].strip()
+            else:
+                final = text
+        return final.strip()
 
     def post_processing_moves(self, response):
         steps = ""

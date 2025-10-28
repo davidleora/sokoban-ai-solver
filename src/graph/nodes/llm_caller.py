@@ -32,14 +32,8 @@ def llm_moves(state: SokobanState) -> SokobanState:
     state['moves'] = ""
     state['status'] = "continue"
     
-    # Select appropriate client based on model name
     model_name = state['model_name']
-    if "gpt" in model_name.lower() or "openai" in model_name.lower():
-        llm_client = LLM_client_openai(model_name)
-    elif "claude" in model_name.lower() or "anthropic" in model_name.lower():
-        llm_client = LLM_client_claude(model_name)
-    else:
-        llm_client = LLM_client_local(model_name)
+    llm_client = LLM_client_local(model_name)
     
     # Build prompt based on context
     current_map_list = state["map"].convert_current_state_to_map()
