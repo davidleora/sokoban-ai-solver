@@ -32,8 +32,12 @@ def llm_moves(state: SokobanState) -> SokobanState:
     state['moves'] = ""
     state['status'] = "continue"
     
-    model_name = state['model_name']
-    llm_client = LLM_client_local(model_name)
+    # Use pre-loaded client if available, otherwise create new one
+    if 'llm_client' in state and state['llm_client'] is not None:
+        llm_client = state['llm_client']
+    else:
+        model_name = state['model_name']
+        llm_client = LLM_client_local(model_name)
     
     # Build prompt based on context
     current_map_list = state["map"].convert_current_state_to_map()

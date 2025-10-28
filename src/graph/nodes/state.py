@@ -15,4 +15,5 @@ class SokobanState(TypedDict, total=False):
     records: dict                       # running metadata recording
     model_name: str                     # the LLM model name
     next_step: str                      # routing decision set by validator
+    llm_client: object                  # pre-loaded LLM client (reused across all calls)
     

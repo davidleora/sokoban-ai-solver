@@ -39,9 +39,13 @@ def generate_result(state: SokobanState) -> SokobanState:
 
     now = datetime.now().strftime("%Y%m%d_%H%M")
     model_name = state['model_name'].split("/")[-1]
-    
+
+    model_folder = temp_folder / model_name
+    if not os.path.exists(model_folder):
+        os.makedirs(model_folder)
+
     # save the dynamic map as gif
     gif_filename = f"result_map_{file_name[:-4]}_{now}_{model_name}.gif"
-    generate_gif.create_gif(state['visited_map_state'], filename=temp_folder / gif_filename, success=(state['status']=="success"))
+    generate_gif.create_gif(state['visited_map_state'], filename=model_folder / gif_filename, success=(state['status']=="success"))
             
     return state
