@@ -1,4 +1,4 @@
-# Project Introduction [RESEARCH IN PROGRESS]
+# Project Introduction [WIP]
 
 This project uses LLM to generate solution for sokoban puzzle game. It also use LangGraph to manage the workflow.
 
