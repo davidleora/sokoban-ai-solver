@@ -112,8 +112,10 @@ class LLM_client:
         )
         outputs = pipe(
             total_messages,
-            max_new_tokens=5000,
+            max_new_tokens=10000,
             temperature=self.temperature,
+            top_k=40,
+            top_p=1.0,
             do_sample=True
         )
         turn = outputs[0]["generated_text"][-1]
