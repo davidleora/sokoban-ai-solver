@@ -2,6 +2,7 @@ from src.graph.nodes.state import SokobanState
 from src.graph.llm.client_openai import LLM_client as LLM_client_openai
 from src.graph.llm.client_claude import LLM_client as LLM_client_claude
 from src.graph.llm.client import LLM_client as LLM_client_local
+import copy
 import time
 
 def llm_moves(state: SokobanState) -> SokobanState:
@@ -20,6 +21,7 @@ def llm_moves(state: SokobanState) -> SokobanState:
         state['current_iteration'] = state['current_iteration'] + 1
         state['visited_map_state'] = []
         state['current_further_prompt'] = 0
+        state['map'] = copy.deepcopy(state['original_map'])
         print(f"\n{'='*70}")
         print(f"🆕 ITERATION {state['current_iteration']}/{state['max_iterations']} - Starting fresh")
         print(f"{'='*70}")

@@ -1,10 +1,12 @@
 from src.graph.nodes.state import SokobanState
 from src.sokoban import game_environment
+import copy
 
 def initiate_state(initial_map: game_environment.SokobanGame, model_name: str) -> SokobanState:
 
     return {
-        "map": initial_map,                    
+        "map": initial_map,
+        "original_map": copy.deepcopy(initial_map),
         "status": "continue",                         
         "moves": "",                       
         "solution": "",

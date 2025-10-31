@@ -4,6 +4,7 @@ from src.sokoban.game_environment import SokobanGame
 
 class SokobanState(TypedDict, total=False):
     map: SokobanGame                    # Current board
+    original_map: SokobanGame           # Original starting map (for resets)
     status: str                         # "success" | "unsolved" | "empty" | "need_further_prompt"
     moves: str                          # All executed primitive moves (L/R/U/D)
     solution: str                       # solution steps (exclude those repetitive cyclic steps)
